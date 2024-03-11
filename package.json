@@ -1,6 +1,7 @@
 {
   "name": "transient-reentrancy-guard",
   "version": "0.0.1",
+  "description": "Solidity Reentrancy Guard implementation using Transient Storage Opcodes (EIP-1153)",
   "files": [
     "src/TransientReentrancyGuard.sol",
     "!src/test/**/*",
