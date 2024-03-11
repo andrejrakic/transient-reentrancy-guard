@@ -1,0 +1,13 @@
+{
+  "name": "transient-reentrancy-guard",
+  "version": "0.0.1",
+  "files": [
+    "src/TransientReentrancyGuard.sol",
+    "!src/test/**/*",
+    "!test/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrejrakic/transient-reentrancy-guard.git"
+  }
+}
