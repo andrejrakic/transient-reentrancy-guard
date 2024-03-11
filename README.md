@@ -4,25 +4,27 @@ Solidity Reentrancy Guard implementation using Transient Storage Opcodes ([EIP-1
 
 ### Usage
 
-1. Install the package by running either:
+1. Install the package by running either
 
 ```
 forge install andrejrakic/transient-reentrancy-guard
 ```
 
+and set remappings to: `transient-reentrancy-guard/=lib/transient-reentrancy-guard/`
+
 Or:
 
 ```
-npm install git+https://github.com/andrej/transient-reentrancy-guard.git --save-dev
+npm install git+https://github.com/andrejrakic/transient-reentrancy-guard.git --save-dev
 ```
 
-2. Then import the [TransientReentrancyGuard](./src/TransientReentrancyGuard.sol) smart contract in your project:
+2. Then import the [TransientReentrancyGuard](./src/TransientReentrancyGuard.sol) smart contract into your project:
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {TransientReentrancyGuard} from "andrejrakic/transient-reentrancy-guard/src/TransientReentrancyGuard.sol";
+import {TransientReentrancyGuard} from "transient-reentrancy-guard/src/TransientReentrancyGuard.sol";
 
 contract MyContract is TransientReentrancyGuard {
     function foo() external nonReentrant {
