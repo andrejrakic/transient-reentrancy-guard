@@ -2,23 +2,27 @@
 
 Solidity Reentrancy Guard implementation using Transient Storage Opcodes ([EIP-1153](https://eips.ethereum.org/EIPS/eip-1153))
 
-### Usage
+### Installation
 
-1. Install the package by running either
+Install the package by running:
+
+#### Foundry (git)
 
 ```
 forge install andrejrakic/transient-reentrancy-guard
 ```
 
-and set remappings to: `transient-reentrancy-guard/=lib/transient-reentrancy-guard/`
+and the set remappings to: `transient-reentrancy-guard/=lib/transient-reentrancy-guard/` in either `remmapings.txt` or `foundry.toml` file
 
-Or:
+#### Hardhat (npm)
 
 ```
 npm install git+https://github.com/andrejrakic/transient-reentrancy-guard.git --save-dev
 ```
 
-2. Then import the [TransientReentrancyGuard](./src/TransientReentrancyGuard.sol) smart contract into your project:
+### Usage
+
+Once installed, import the [TransientReentrancyGuard](./src/TransientReentrancyGuard.sol) smart contract into your project:
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -32,6 +36,10 @@ contract MyContract is TransientReentrancyGuard {
     }
 }
 ```
+
+> [!IMPORTANT]
+>
+> EIP-1153 is supported since the Dencun upgrade so you will need to use at least the 0.8.24 version of the Solidity compiler and the `cancun` EVM version. To see how to configure those in different development environments check [this StackOverflow answer](https://stackoverflow.com/questions/76328677/remix-returned-error-jsonrpc2-0-errorinvalid-opcode-push0-id24/76332341#76332341)
 
 ### Build & Test
 
