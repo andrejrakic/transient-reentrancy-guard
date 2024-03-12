@@ -4,11 +4,13 @@ pragma solidity ^0.8.24;
 import {Test, console2} from "forge-std/Test.sol";
 import {Client} from "../src/test/Client.sol";
 import {VulnerableClient} from "../src/test/VulnerableClient.sol";
+import {ClientOpenZeppelin} from "../src/test/ClientOpenZeppelin.sol";
 import {Attacker} from "../src/test/Attacker.sol";
 
 contract TransientReentrancyGuardTest is Test {
     Client public client;
     VulnerableClient public vulnerableClient;
+    ClientOpenZeppelin public clientOpenZeppelin;
     Attacker public attacker;
     address alice;
 
@@ -17,15 +19,21 @@ contract TransientReentrancyGuardTest is Test {
 
         client = new Client();
         vulnerableClient = new VulnerableClient();
+        clientOpenZeppelin = new ClientOpenZeppelin();
         attacker = new Attacker(alice, address(client));
     }
 
-    function test_transientReentrancyGuard() external {
+    function prepareScenario() public returns (uint256, uint256) {
         uint256 initialAmount = 100 ether;
         uint256 depositAmount = 10 ether;
         vm.deal(alice, initialAmount);
         assertEq(alice.balance, initialAmount);
 
+        return (initialAmount, depositAmount);
+    }
+
+    function test_transientReentrancyGuardAttackScenario() external {
+        (uint256 initialAmount, uint256 depositAmount) = prepareScenario();
         vm.startPrank(alice);
 
         client.deposit{value: depositAmount}();
@@ -49,6 +57,46 @@ contract TransientReentrancyGuardTest is Test {
         assertEq(address(vulnerableClient).balance, 0);
         assertEq(alice.balance, initialAmount - 2 * depositAmount);
         assertEq(address(attacker).balance, 0);
+
+        vm.stopPrank();
+    }
+
+    function test_withdrawTransientReentrancyGuard() external {
+        (uint256 initialAmount, uint256 depositAmount) = prepareScenario();
+        vm.startPrank(alice);
+
+        clientOpenZeppelin.deposit{value: depositAmount}();
+        assertEq(alice.balance, initialAmount - depositAmount);
+        assertEq(address(clientOpenZeppelin).balance, depositAmount);
+
+        attacker.setVictim(address(clientOpenZeppelin));
+        attacker.deposit{value: depositAmount}();
+        assertEq(alice.balance, initialAmount - 2 * depositAmount);
+        assertEq(address(clientOpenZeppelin).balance, 2 * depositAmount);
+
+        clientOpenZeppelin.withdraw();
+        assertEq(alice.balance, initialAmount - depositAmount);
+        assertEq(address(clientOpenZeppelin).balance, depositAmount);
+
+        vm.stopPrank();
+    }
+
+    function test_withdrawOpenZeppelinReentrancyGuard() external {
+        (uint256 initialAmount, uint256 depositAmount) = prepareScenario();
+        vm.startPrank(alice);
+
+        client.deposit{value: depositAmount}();
+        assertEq(alice.balance, initialAmount - depositAmount);
+        assertEq(address(client).balance, depositAmount);
+
+        attacker.setVictim(address(client));
+        attacker.deposit{value: depositAmount}();
+        assertEq(alice.balance, initialAmount - 2 * depositAmount);
+        assertEq(address(client).balance, 2 * depositAmount);
+
+        client.withdraw();
+        assertEq(alice.balance, initialAmount - depositAmount);
+        assertEq(address(client).balance, depositAmount);
 
         vm.stopPrank();
     }

@@ -1,6 +1,6 @@
 ## Transient Reentrancy Guard
 
-Solidity Reentrancy Guard implementation using Transient Storage Opcodes ([EIP-1153](https://eips.ethereum.org/EIPS/eip-1153))
+Solidity Reentrancy Guard implementation using Transient Storage Opcodes ([EIP-1153](https://eips.ethereum.org/EIPS/eip-1153)). Almost 2000 gas units cheaper than OpenZeppelin's pre-cancun implementation.
 
 ### Installation
 

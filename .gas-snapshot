@@ -1,0 +1,3 @@
+TransientReentrancyGuardTest:test_transientReentrancyGuardAttackScenario() (gas: 176401)
+TransientReentrancyGuardTest:test_withdrawOpenZeppelinReentrancyGuard() (gas: 75564)
+TransientReentrancyGuardTest:test_withdrawTransientReentrancyGuard() (gas: 80242)
