@@ -15,7 +15,7 @@ contract ClientOpenZeppelin is ReentrancyGuard {
     }
 
     function withdraw() external nonReentrant {
-        (bool success, ) = msg.sender.call{value: deposits[msg.sender]}("");
+        (bool success,) = msg.sender.call{value: deposits[msg.sender]}("");
         if (!success) revert EthTransferFailed();
 
         delete deposits[msg.sender];

@@ -100,4 +100,15 @@ contract TransientReentrancyGuardTest is Test {
 
         vm.stopPrank();
     }
+
+    function test_fuzzAttackerMustNotReenter(uint256 depositAmount) external {
+        vm.assume(depositAmount <= address(msg.sender).balance);
+
+        attacker.deposit{value: depositAmount}();
+        uint256 clientAmountBeforeAttack = address(client).balance;
+        attacker.attack();
+
+        // Attacker must only withdraw its own deposit and nothing more
+        assertEq(address(client).balance, clientAmountBeforeAttack - depositAmount);
+    }
 }
